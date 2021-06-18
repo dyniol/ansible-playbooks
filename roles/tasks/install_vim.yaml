@@ -1,6 +1,0 @@
----
-
-- block:
-
-  - name: Install Vim
-    apt: update_cache=yes name=vim state=latest

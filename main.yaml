@@ -1,53 +1,58 @@
 ---
 
-  - name: Does the Google ap file exist?
-    command: test -f
-    register: google_apt_exists
-    ignore_errors: True
+  - name: playbook
+    hosts: localhost
+    connection: local
+    become: true
+    tasks:
+    - name: Does the Google ap file exist?
+      command: test -f
+      register: google_apt_exists
+      ignore_errors: True
 
-  - name: Add Google Chrome key
-    shell: wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-    when: google_apt_exists.rc == 1
+    - name: Add Google Chrome key
+      shell: wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+      when: google_apt_exists.rc == 1
 
-  - name: Add Google Chrome repo
-    copy: content="deb http://dl.google.com/linux/chrome/deb/ stable main" dest= owner=root group=root mode=644
-    when: google_apt_exists.rc == 1
+    - name: Add Google Chrome repo
+      copy: content="deb http://dl.google.com/linux/chrome/deb/ stable main" dest= owner=root group=root mode=644
+      when: google_apt_exists.rc == 1
 
-  - name: Update apt cache
-    apt: update_cache=yes
-    when: google_apt_exists.rc == 1
+    - name: Update apt cache
+      apt: update_cache=yes
+      when: google_apt_exists.rc == 1
 
-  - name: Install Google Chrome
-    apt: pkg=google-chrome-stable state=present
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-  - name: Install aptitude using apt
-    apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+    - name: Install Google Chrome
+      apt: pkg=google-chrome-stable state=present
+  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+    - name: Install aptitude using apt
+      apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
 
-  - name: Install required system packages
-    apt: name={{ item }} state=latest update_cache=yes
-    loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
 
-  - name: Add Docker GPG apt key
-    apt_key:
-      url: https://download.docker.com/linux/ubuntu/gpg
-      state: present
+    - name: Add Docker GPG apt key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
 
-  - name: Add Docker Repository
-    apt_repository:
-      repo: deb https://download.docker.com/linux/ubuntu bionic stable
-      state: present
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
 
-  - name: Update apt and install docker-ce
-    apt: update_cache=yes name=docker-ce state=latest
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker-ce state=latest
 
-  - name: Install Docker Module for Python
-    pip:
-      name: docker
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
 
-  - name: Pull default Docker image
-    docker_image:
-      name: ubuntu
-      source: pull
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-  - name: Instal vim
-    apt: update_cache=yes name=vim state=latest
+    - name: Pull default Docker image
+      docker_image:
+        name: ubuntu
+        source: pull
+  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+    - name: Instal vim
+      apt: update_cache=yes name=vim state=latest
