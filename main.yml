@@ -1,5 +1,5 @@
 ---
-- block:
+
   - name: Instal Chrome
     include_tasks: "install_chrome.yaml"
 
