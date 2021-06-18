@@ -1,9 +1,0 @@
----
-  - name: Instal Chrome
-    include_tasks: "roles/tasks/install_chrome.yaml"
-
-  - name: Instal Docker
-    include_tasks: "roles/tasks/install_docker.yaml"
-
-  - name: Instal vim
-    include_tasks: "roles/tasks/install_vim.yaml"
