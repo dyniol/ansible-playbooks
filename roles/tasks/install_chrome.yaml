@@ -1,4 +1,5 @@
 ---
+  tasks:
   - name: Does the Google ap file exist?
     command: test -f
     register: google_apt_exists
