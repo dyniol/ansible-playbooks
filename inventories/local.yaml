@@ -1,0 +1,6 @@
+---
+all:
+  localhost:
+    - hosts: localhost
+      connection: local
+      become: yes
