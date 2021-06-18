@@ -1,9 +1,10 @@
 ---
-- name: Instal Chrome
-  include_tasks: "install_chrome.yaml"
+- block:
+  - name: Instal Chrome
+    include_tasks: "install_chrome.yaml"
 
-- name: Instal Docker
-  include_tasks: "install_docker.yaml"
+  - name: Instal Docker
+    include_tasks: "install_docker.yaml"
 
-- name: Instal vim
-  include_tasks: "install_vim.yaml"
+  - name: Instal vim
+    include_tasks: "install_vim.yaml"
