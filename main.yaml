@@ -3,27 +3,22 @@
   - name: playbook
     hosts: localhost
     connection: local
-    become: true
+    gather_facts: no
+    become: yes
     tasks:
-    - name: Does the Google ap file exist?
-      command: test -f
-      register: google_apt_exists
-      ignore_errors: True
+    - name: Download pip installer
+      get_url:
+        url: https://bootstrap.pypa.io/get-pip.py
+        dest: /tmp/get-pip.py
+    - name: Install pip
+      shell: |
+        /usr/bin/python /tmp/get-pip.py
+    - name: Create app folder
+      file:
+        name: /opt/python
+        state: directory
+        recurse: yes
 
-    - name: Add Google Chrome key
-      shell: wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-      when: google_apt_exists.rc == 1
-
-    - name: Add Google Chrome repo
-      copy: content="deb http://dl.google.com/linux/chrome/deb/ stable main" dest= owner=root group=root mode=644
-      when: google_apt_exists.rc == 1
-
-    - name: Update apt cache
-      apt: update_cache=yes
-      when: google_apt_exists.rc == 1
-
-    - name: Install Google Chrome
-      apt: pkg=google-chrome-stable state=present
   # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
     - name: Install aptitude using apt
       apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
@@ -54,5 +49,25 @@
         name: ubuntu
         source: pull
   # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+    - name: Does the Google ap file exist?
+      command: test -f
+      register: google_apt_exists
+      ignore_errors: True
+
+    - name: Add Google Chrome key
+      shell: wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+      when: google_apt_exists.rc == 1
+
+    - name: Add Google Chrome repo
+      copy: content="deb http://dl.google.com/linux/chrome/deb/ stable main" dest= owner=root group=root mode=644
+      when: google_apt_exists.rc == 1
+
+    - name: Update apt cache
+      apt: update_cache=yes
+      when: google_apt_exists.rc == 1
+
+    - name: Install Google Chrome
+      apt: pkg=google-chrome-latest state=present
+  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #  
     - name: Instal vim
       apt: update_cache=yes name=vim state=latest
